@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "box_pose_estimation"
+version = "0.1.0"
+description = "Box Pose estimation using Open3D"
+authors = ["Mohamed Elhamzawy"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.24"
+open3d = "^0.18"
+pyyaml = "^6.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
