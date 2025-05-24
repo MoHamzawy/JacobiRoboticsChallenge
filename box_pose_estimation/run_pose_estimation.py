@@ -1,4 +1,5 @@
 import yaml, os, numpy as np, open3d as o3d
+import random
 
 def load_config(path="box_pose_estimation/config.yaml"):
     with open(path) as f: 
@@ -9,7 +10,8 @@ def load_data(cfg):
     return (
         np.load(os.path.join(d, cfg["depth_file"])),
         np.load(os.path.join(d, cfg["color_file"])),
-        np.load(os.path.join(d, cfg["intrinsics_file"]))
+        np.load(os.path.join(d, cfg["intrinsics_file"])),
+        np.load(os.path.join(d, cfg["extrinsics_file"]))
     )
 
 def create_point_cloud(depth, color, k):
@@ -30,39 +32,38 @@ def create_point_cloud(depth, color, k):
     intr = o3d.camera.PinholeCameraIntrinsic(w, h, k[0,0], k[1,1], k[0,2], k[1,2])
     pcd = o3d.geometry.PointCloud.create_from_rgbd_image(rgbd_img, intr)
 
-    # Flip the point cloud along the Z-axis
-    flip_transform = np.array([
-        [1, 0,  0, 0],
-        [0, 1,  0, 0],
-        [0, 0, -1, 0],
-        [0, 0,  0, 1]
-    ])
-    pcd.transform(flip_transform)
-
     return pcd
 
-def estimate_pose(pcd, thresh=0.005):
-    plane, idx = pcd.segment_plane(distance_threshold=thresh, ransac_n=3, num_iterations=1000)
-    top = pcd.select_by_index(idx)
-    obb = top.get_oriented_bounding_box()
-    normal = plane[:3] / np.linalg.norm(plane[:3])
-    R = obb.R.copy()
-    if np.dot(R[:,2], normal) < 0:
-        R[:,0] *= -1
-        R[:,1] *= -1
-        R[:,2] *= -1
-    T = np.eye(4)
-    T[:3,:3] = R
-    T[:3,3] = obb.center
-    return T, obb
+def cluster_and_colorize(pcd, eps=0.02, min_points=50):
+    labels = np.array(pcd.cluster_dbscan(eps=eps, min_points=min_points, print_progress=True))
+    max_label = labels.max()
+    print(f"Found {max_label + 1} clusters")
 
-def visualise(pcd, obb):
-    o3d.visualization.draw_geometries([pcd, obb])
+    colors = np.random.rand(max_label + 1, 3)
+    colors = np.vstack([colors, np.zeros((1, 3))])  # Add black for noise label (-1)
+    pcd.colors = o3d.utility.Vector3dVector(colors[labels])
+    return pcd, labels
+
+def analyze_clusters(pcd, labels):
+    max_label = labels.max()
+    print(f"\nCluster analysis (total: {max_label + 1}):\n")
+
+    for i in range(max_label + 1):
+        indices = np.where(labels == i)[0]
+        cluster = pcd.select_by_index(indices)
+        obb = cluster.get_oriented_bounding_box()
+        extent = obb.extent  # [width, height, depth] along principal axes
+
+        print(f"Cluster {i}:")
+        print(f"  Num Points: {len(indices)}")
+        print(f"  Size (x, y, z): {extent[0]:.3f}, {extent[1]:.3f}, {extent[2]:.3f}")
+        print(f"  Center: {obb.center}\n")
 
 if __name__ == "__main__":
     cfg = load_config()
-    depth, color, K = load_data(cfg)
+    depth, color, K, extrinsics = load_data(cfg)
     cloud = create_point_cloud(depth, color, K)
-    pose, box = estimate_pose(cloud)
-    print("Camera → object transformation:\n", pose)
-    visualise(cloud, box)
+    down_sampled = cloud.voxel_down_sample(voxel_size=0.005)
+    clustered, labels = cluster_and_colorize(down_sampled)
+    analyze_clusters(clustered, labels)
+    o3d.visualization.draw_geometries([clustered])
