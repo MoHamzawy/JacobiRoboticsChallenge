@@ -5,6 +5,7 @@ import open3d as o3d
 import copy
 import cv2
 from sklearn.decomposition import PCA
+import time
 
 def load_config_file(path="box_pose_estimation/config.yaml"):
     with open(path, "r") as f:
@@ -173,15 +174,40 @@ def estimate_and_visualize_boxes(pcd_filtered, cfg):
     return geometries
 
 if __name__ == "__main__":
+    total_start = time.perf_counter()
+
+    # Step 1: Load config and data
+    t0 = time.perf_counter()
     cfg = load_config_file()
     depth, color, intrinsics, extrinsics = load_data(cfg)
     extrinsics[:3, 3] /= 1000.0
+    print(f"Data loaded in {time.perf_counter() - t0:.3f} s")
 
+    # Step 2: Create point cloud
+    t0 = time.perf_counter()
     pcd = create_point_cloud(depth, color, intrinsics)
+    print(f"Point cloud created in {time.perf_counter() - t0:.3f} s")
+
+    # Step 3: Transform to world frame
+    t0 = time.perf_counter()
     pcd_world = transform_point_cloud(pcd, extrinsics)
+    voxel_size = cfg.get("voxel_size", 0.005)
+    pcd_world = pcd_world.voxel_down_sample(voxel_size)
+    print(f"Transformed to world frame in {time.perf_counter() - t0:.3f} s")
 
+    # Step 4: Filtering
+    t0 = time.perf_counter()
     pcd_filtered = apply_filtering_strategy(pcd_world, cfg)
-    geometries = estimate_and_visualize_boxes(pcd_filtered, cfg)
+    print(f"Point cloud filtered in {time.perf_counter() - t0:.3f} s")
 
+    # Step 5: Pose estimation and visualization geometry
+    t0 = time.perf_counter()
+    geometries = estimate_and_visualize_boxes(pcd_filtered, cfg)
+    print(f"Box pose estimation completed in {time.perf_counter() - t0:.3f} s")
+
+    print(f"✅ Total execution time: {time.perf_counter() - total_start:.3f} s")
+
+    # Step 6: Visualization
     o3d.visualization.draw_geometries(geometries)
+
 

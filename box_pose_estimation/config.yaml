@@ -4,6 +4,8 @@ color_file: one-box.color.npdata.npy
 intrinsics_file: intrinsics.npy
 extrinsics_file: extrinsics.npy
 
+voxel_size: 0.005
+
 filter_strategy: "full"  # options: "roi", "full"
 
 roi_min_bound: [-1.5, -1.3, -0.85]
@@ -12,4 +14,4 @@ roi_max_bound: [1.5, 1.3, 0.0]
 filter_strategy: "full"
 normal_z_threshold: 0.6
 z_min_filter: -0.85
-min_cluster_size: 6000
+min_cluster_size: 100
