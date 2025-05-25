@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "box_pose_estimation"
+name = "estimation"
 version = "0.1.0"
 description = "Box Pose estimation using Open3D"
 authors = ["Mohamed Elhamzawy"]

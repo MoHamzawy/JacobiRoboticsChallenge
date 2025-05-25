@@ -7,7 +7,7 @@ import cv2
 from sklearn.decomposition import PCA
 import time
 
-def load_config_file(path="box_pose_estimation/config.yaml"):
+def load_config_file(path="estimation/config.yaml"):
     with open(path, "r") as f:
         return yaml.safe_load(f)
     
