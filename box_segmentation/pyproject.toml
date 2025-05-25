@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "segmentation"
+version = "0.1.0"
+description = "Box segmentation using deep learning"
+authors = ["Mohamed Elhamzawy"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = "^2.2.0"
+torchvision = "^0.17.0"
+torchaudio = "^2.2.0"
+segmentation-models-pytorch = "^0.3.2"
+albumentations = "^1.4.3"
+opencv-python = "^4.9.0"
+matplotlib = "^3.7.1"
+numpy = "^1.24"
+tqdm = "^4.66.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
