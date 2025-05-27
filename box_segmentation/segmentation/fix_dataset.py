@@ -1,6 +1,7 @@
 import os
 import json
 import cv2
+import yaml
 
 def fix_json_image_sizes(json_path: str, image_root: str, output_json_path: str = None):
     with open(json_path, "r", encoding="utf-8") as f:
@@ -38,15 +39,27 @@ def fix_json_image_sizes(json_path: str, image_root: str, output_json_path: str 
     else:
         print("✅ All entries already match actual image sizes.")
 
-    # Save to file
     output_path = output_json_path or json_path
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
     print(f"✅ Saved fixed annotations to: {output_path}")
 
-# === USAGE ===
-json_path = r"C:/Users/ID_Admin/Downloads/OSCD/coco_carton/oneclass_carton/annotations/instances_train2017.json"
-image_root = r"C:/Users/ID_Admin/Downloads/OSCD/coco_carton/oneclass_carton/images/train2017"
+def main():
+    with open("segmentation/config.yaml", "r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
 
-# Optional: change output_json_path if you want to save as a separate file
-fix_json_image_sizes(json_path, image_root)
+    root = cfg["root_path"]
+
+    splits = [
+        ("train", cfg["train_json"], cfg["train_images"]),
+        ("val", cfg["val_json"], cfg["val_images"]),
+    ]
+
+    for name, json_rel, images_rel in splits:
+        print(f"\n🔍 Processing {name} set...")
+        json_path = os.path.join(root, json_rel)
+        image_dir = os.path.join(root, images_rel)
+        fix_json_image_sizes(json_path, image_dir)
+
+if __name__ == "__main__":
+    main()
