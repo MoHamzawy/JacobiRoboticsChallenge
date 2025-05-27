@@ -16,7 +16,9 @@ def load_config(path="segmentation/config.yaml"):
 def setup_predictor(cfg_data):
     root_path = cfg_data["root_path"]
     model_weights_path = os.path.join(cfg_data["output_dir"], "model_final.pth")
-
+    if not os.path.exists(model_weights_path):
+        raise FileNotFoundError(f"❌ Model weights not found at {model_weights_path}")
+    
     cfg = get_cfg()
     cfg.merge_from_file(model_zoo.get_config_file(cfg_data["model_config"]))
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = cfg_data["num_classes"]
