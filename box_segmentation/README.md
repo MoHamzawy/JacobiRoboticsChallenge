@@ -112,7 +112,8 @@ as suggested by the challenge. The COCO-style dataset contained some incorrect `
 This caused some problems while training. So when you download the dataset you need to run the following:
 
 ```bash
-python box_segmentation/fix_dataset.py
+cd box_segmentation
+python segmentation/fix_dataset.py
 ```
 
 ---
@@ -122,7 +123,7 @@ python box_segmentation/fix_dataset.py
 To run training
 
 ```bash
-python box_segmentation/train_segmentation.py
+python segmentation/train_segmentation.py
 ```
 
 ### 🚀 Inference
@@ -131,11 +132,11 @@ To run prediction and visualization:
 
 - Download the provided weights in the zip file attached. It should have model_final.pth file.
 - Place the file into the appropriate output directory.
-- put this in box_segmentation/segmentation/config.yaml in output_dir
+- put this in segmentation/config.yaml in output_dir
 - Run the following
 
 ```bash
-python box_segmentation/run_segmentation.py
+python segmentation/run_segmentation.py
 ```
 
 
