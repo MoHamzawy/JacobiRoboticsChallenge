@@ -1,4 +1,4 @@
-data_dir: C:/Users/ID_Admin/Desktop/work/git/playground/JacobiRoboticsChallenge/data
+data_dir: C:/dev/JacobiRoboticsChallenge/data
 depth_file: one-box.depth.npdata.npy
 color_file: one-box.color.npdata.npy
 intrinsics_file: intrinsics.npy

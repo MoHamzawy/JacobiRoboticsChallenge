@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd -P)"
+PROJECT_ROOT="${SCRIPT_DIR}/.."
+
 echo "🔧 Creating Python virtual environment..."
 python3.11 -m venv .venv
 
@@ -28,7 +31,14 @@ echo "🧪 Testing torch import in subprocess..."
 python -c "import torch; print('Torch OK ✅', torch.__version__)"
 
 echo "📦 Installing all other dependencies..."
-pip install -r requirements.txt
+pip install -r $PROJECT_ROOT/box_segmentation/requirements.txt
+
+if [ ! -d "detectron2" ]; then
+    echo "⬇️  Cloning Detectron2..."
+    git clone https://github.com/facebookresearch/detectron2.git
+else
+    echo "✅ Detectron2 already cloned"
+fi
 
 echo "📦 Installing Detectron2 from local path..."
 pip install ./detectron2 --no-build-isolation --no-use-pep517
