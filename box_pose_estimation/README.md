@@ -114,17 +114,18 @@ After filtering, for each cluster:
 
 ### 🔧 Prerequisites
 
-Install [Poetry](https://python-poetry.org/docs/#installation):
+- Install [Poetry](https://python-poetry.org/docs/#installation):
 
-```bash
-curl -sSL https://install.python-poetry.org | python3 -
-```
+   ```bash
+   curl -sSL https://install.python-poetry.org | python3 -
+   ```
+- Please modify the path to where your data is in box_pose_estimation/estimation/config.yaml
 
 ---
 
 ### ▶️ Run the Pipeline
 
-Once Poetry is installed, run the pipeline using the following script:
+Once Poetry is installed and your config is modified, run the pipeline using the following script:
 
 ```bash
 ./scripts/run_pose_estimation.sh
