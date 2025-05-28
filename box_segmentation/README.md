@@ -74,7 +74,7 @@ I trained this model quickly for the challenge, but there are definitely ways to
 So while this version works well, there's still room to improve if we wanted to push the results higher.
 
 
-## 🚁 Deployment
+## 🚁 How to run
 
 ### ✅ Requirements
 
@@ -83,7 +83,6 @@ So while this version works well, there's still room to improve if we wanted to 
 * Detectron2
 * OpenCV, PyYAML, etc. (see `requirements.txt`)
 * Visual C++ Redistributables if you use Windows
-
 ---
 
 ### ⚙️ Setup
@@ -104,6 +103,17 @@ Make sure to:
 
 * Place your `model_final.pth` inside the configured `output_dir`
 * Adjust `root_path` in `config.yaml` to your dataset location. Please download the dataset from https://github.com/yancie-yjr/scd.github.io
+
+---
+## 🧼 Dataset
+
+I have used the [Stacked Carton Dataset](https://github.com/yancie-yjr/scd.github.io)
+as suggested by the challenge. The COCO-style dataset contained some incorrect `width` and `height` values in the JSON annotation files. 
+This caused some problems while training. So when you download the dataset you need to run the following:
+
+```bash
+python box_segmentation/fix_dataset.py
+```
 
 ---
 
