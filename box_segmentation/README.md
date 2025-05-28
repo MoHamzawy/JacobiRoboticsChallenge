@@ -129,6 +129,11 @@ python box_segmentation/train_segmentation.py
 
 To run prediction and visualization:
 
+- Download the provided weights in the zip file attached. It should have model_final.pth file.
+- Place the file into the appropriate output directory.
+- put this in box_segmentation/segmentation/config.yaml in output_dir
+- Run the following
+
 ```bash
 python box_segmentation/run_segmentation.py
 ```
