@@ -1,6 +1,6 @@
 # 📦 Box Pose Estimation from RGB-D Data
 
-This project performs **6D pose estimation of flat rectangular boxes** using RGB-D input. It uses **Open3D**, **OpenCV**, and **PCA-based analysis** to estimate the **3D center position** and **orientation** of boxes placed on a known surface. The pipeline is optimized for planar objects like cardboard boxes on pallets or tables, typically found in industrial or logistics settings.
+This project performs **6D pose estimation of a box** using RGB-D input. It uses **Open3D**, **OpenCV**, and **PCA-based analysis** to estimate the **3D center position** and **orientation** of boxes placed on a known surface. The pipeline is optimized for planar objects like cardboard boxes on pallets or tables, typically found in industrial or logistics settings.
 
 ---
 
@@ -24,7 +24,7 @@ The system takes an RGB-D image as input and executes the following pipeline:
 | **1. Load Data**               | Load depth, color, intrinsics, and extrinsics from `.npy` files.     |
 | **2. Point Cloud Creation**    | Construct a colored 3D point cloud using Open3D.                     |
 | **3. World Transformation**    | Apply extrinsics to align the point cloud to the world frame.        |
-| **4. Downsampling (optional)** | Reduce point cloud size for speed without losing structure.          |
+| **4. Downsampling** | Reduce point cloud size for speed without losing structure.          |
 | **5. Filtering**               | Remove irrelevant parts of the scene.                                |
 | **6. Clustering**              | Group remaining geometry using DBSCAN.                               |
 | **7. Pose Estimation**         | Recover 3D position and orientation using PCA and `cv2.minAreaRect`. |
