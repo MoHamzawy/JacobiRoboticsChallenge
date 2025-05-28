@@ -19,5 +19,5 @@ batch_size_per_image: 256     # ↑ more region proposals
 base_lr: 0.00025
 max_iter: 10000               # ↑ from 1000 → trains longer = better learning
 
-# Output
+# Output This is where the model is saved and loaded from for inference
 output_dir: C:/Users/ID_Admin/Downloads/OSCD/coco_carton/oneclass_carton/output
