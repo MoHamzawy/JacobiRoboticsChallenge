@@ -123,5 +123,4 @@ To run prediction and visualization:
 python box_segmentation/run_segmentation.py
 ```
 
-                         |
 
